@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Connecting People & World</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Shippori+Mincho:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #38bdf8 100%);
+        }
+
+        .card-hover {
+            border: 3px solid #1e3a8a;
+            box-shadow: 6px 6px 0px #1e3a8a;
+            background: #ffffff;
+            transition: 0.25s ease-in-out;
+        }
+
+        .card-hover:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #38bdf8;
+            border-color: #38bdf8;
+        }
+
+        /* モーダル表示時の背景スクロール防止 */
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="text-slate-900 bg-slate-50">
+
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b-4 border-[#1e3a8a]">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="font-bold text-xl tracking-tight text-[#1e3a8a]">MY PORTFOLIO</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#about" class="hover:text-[#38bdf8] transition">About</a>
+                <a href="#projects" class="hover:text-[#38bdf8] transition">Activities</a>
+                <a href="#research" class="hover:text-[#38bdf8] transition">Research</a>
+                <a href="#hobbies" class="hover:text-[#38bdf8] transition">Hobbies</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-20 hero-gradient text-white">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div
+                class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold mb-4 tracking-widest uppercase border border-white/30">
+                Global PBL | Disaster Prevention | Research
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                人と社会をつなぐ視点で、<br>課題と向き合う。
+            </h1>
+
+            <p class="text-slate-200 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
+                台湾での国際PBLプロジェクトや世界防災フォーラムでの発表、<br>
+                そして高齢者の日常会話コミュニケーションに関する研究などに取り組んできました。<br>
+                現場での経験と研究を行き来しながら、社会の課題を多角的に捉えることを目指しています。
+            </p>
+
+            <div class="flex justify-center gap-4">
+                <a href="#projects"
+                    class="bg-[#1e3a8a] hover:bg-[#38bdf8] px-8 py-3 rounded-full font-bold transition shadow-lg">
+                    活動実績を見る
+                </a>
+                <a href="#research"
+                    class="border border-white/30 hover:bg-white/10 px-8 py-3 rounded-full font-bold transition">
+                    研究内容
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div
+                    class="w-48 h-48 bg-slate-200 rounded-2xl flex-shrink-0 overflow-hidden shadow-inner border border-slate-100">
+                    <img src="Image\Image_AboutMe.jpg" alt="About Me Image" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h2 class="text-3xl font-bold mb-4 text-[#0f172a]">About Me</h2>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        私は、現場に足を運び、異なる文化や世代の方々と対話することを大切にしています。台湾での国際PBLでは、多様なバックグラウンドを持つ仲間と協力し、技術が社会にどう貢献できるかを追求しました。
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        大学では高齢者の会話特徴に着目し、超高齢社会における円滑なコミュニケーションのあり方をデータから解き明かしています。「動くこと」と「考えること」の双方を大切にする、行動派のリサーチャーを目指しています。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-20 bg-slate-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center text-[#0f172a]">Featured Activities</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <div class="rounded-2xl overflow-hidden card-hover group cursor-pointer"
+                    onclick="openModal('modal-pbl')">
+                    <div class="h-48 relative overflow-hidden bg-[#0f172a]">
+                        <img src="Image\Image_PBL.jpg" alt="PBL"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out">
+                        <div
+                            class="absolute inset-0 flex items-center justify-center p-6 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-700 ease-in-out">
+                            <span class="text-white font-bold text-xl">International PBL in Taiwan</span>
+                        </div>
+                        <div
+                            class="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                            <span class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">クリックで詳細 ＋</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Global Experience
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-[#1e3a8a]">台湾での国際PBL（プロジェクト学習）</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            台湾の大学との共同プロジェクトに参加。言語や文化の壁を越え、現地のニーズに基づいたソリューション提案を行いました。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl overflow-hidden card-hover group cursor-pointer"
+                    onclick="openModal('modal-bosai')">
+                    <div class="h-48 relative overflow-hidden bg-[#1e3a8a]">
+                        <img src="Image/Image_Bosai.jpg" alt="World Bosai Forum"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out">
+                        <div
+                            class="absolute inset-0 flex items-center justify-center p-6 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-700 ease-in-out">
+                            <span class="text-white font-bold text-xl">World Bosai Forum 2025</span>
+                        </div>
+                        <div
+                            class="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                            <span class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">クリックで詳細 ＋</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Poster Presentation
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-[#1e3a8a]">世界防災フォーラム ポスター発表</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            国際的なフォーラムにて、防災に関する研究成果をポスター形式で発表しました。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="research" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-[#0f172a]">University Research</h2>
+            <div class="bg-slate-50 p-8 md:p-12 rounded-3xl border border-slate-200">
+                <div class="flex items-start gap-6 mb-6">
+                    <div class="bg-[#1e3a8a] text-white p-3 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-[#0f172a]">高齢者の会話特徴に関する研究</h3>
+                        <p class="text-[#38bdf8] font-bold">Keywords: 会話分析, 音声コミュニケーション, 超高齢社会</p>
+                    </div>
+                </div>
+                <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed">
+                    <p class="mb-4">
+                        大学では、高齢者同士や多世代間の円滑なコミュニケーションを支援するため、会話の特徴を定量的・定性的に分析しています。
+                    </p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>会話のテンポ、相槌、話題の遷移パターンの抽出</li>
+                        <li>認知機能や孤独感と会話特徴の相関調査</li>
+                        <li>コミュニケーション活性化のためのシステム提案</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hobbies" class="py-20 bg-slate-50 text-slate-900">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center text-[#0f172a]">Interests & Hobbies</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="p-8 text-center card-hover rounded-2xl">
+                    <div class="text-4xl mb-4">🥋</div>
+                    <h3 class="font-bold mb-2 text-[#1e3a8a]">柔道</h3>
+                    <p class="text-xs text-slate-500">心身を律し、礼を学ぶ</p>
+                </div>
+                <div class="p-8 text-center card-hover rounded-2xl">
+                    <div class="text-4xl mb-4">🚲</div>
+                    <h3 class="font-bold mb-2 text-[#1e3a8a]">サイクリング</h3>
+                    <p class="text-xs text-slate-500">風を切って進む爽快感</p>
+                </div>
+                <div class="p-8 text-center card-hover rounded-2xl">
+                    <div class="text-4xl mb-4">🗺️</div>
+                    <h3 class="font-bold mb-2 text-[#1e3a8a]">散歩・冒険</h3>
+                    <p class="text-xs text-slate-500">知らない街の発見を楽しむ</p>
+                </div>
+                <div class="p-8 text-center card-hover rounded-2xl">
+                    <div class="text-4xl mb-4">✈️</div>
+                    <h3 class="font-bold mb-2 text-[#1e3a8a]">旅行</h3>
+                    <p class="text-xs text-slate-500">新しい景色と価値観との出会い</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 bg-[#0f172a] text-slate-400">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="https://www.linkedin.com/in/%E4%BC%B8%E9%A1%95-%E4%BB%8A%E4%B8%AD-23bab2353/" target="_blank"
+                    class="hover:text-[#38bdf8] transition">LinkedIn</a>
+            </div>
+            <p class="text-sm">© 2025 Nobuaki Imanaka</p>
+        </div>
+    </footer>
+
+    <div id="modal-pbl"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#0f172a]/80 backdrop-blur-sm transition-opacity"
+        onclick="closeModal('modal-pbl')">
+        <div class="bg-white rounded-3xl p-8 md:p-10 max-w-2xl w-full mx-4 relative shadow-2xl border-4 border-[#1e3a8a] max-h-[90vh] overflow-y-auto"
+            onclick="event.stopPropagation()">
+
+            <button onclick="closeModal('modal-pbl')"
+                class="absolute top-4 right-6 text-slate-400 hover:text-[#38bdf8] text-3xl font-bold">&times;</button>
+
+            <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Global Experience</div>
+            <h3 class="text-2xl font-bold mb-6 text-[#1e3a8a]">台湾での国際PBL（プロジェクト学習）</h3>
+
+            <img src="Image/Image_PBL.jpg" alt="PBL Detail" class="w-full h-64 object-cover rounded-xl mb-6 shadow-sm">
+
+            <h4 class="font-bold text-slate-800 mb-2">✈️ 異文化PBLで掴んだ、課題解決のリアル</h4>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                台湾の雲林で「高齢者が抱える問題」をテーマにした国際PBL（プロジェクト型学習）に参加しました。現地の学生とチームを組み、実際に自転車で地域を散策してフィールドワークを実施。そこで目の当たりにしたのは、広大な田畑に家が点在して移動自体が困難な状況と、若者の都市流出によって生まれる「高齢者の孤独」でした。<br><br>
+                日本の地方課題とも重なるこの「外出困難な高齢者の孤独」という根深い問題に対し、私たちはITの力で解決すべく「通話アプリ」の企画・提案を行いました。
+            </p>
+
+            <h4 class="font-bold text-slate-800 mb-2">🤝 協働の難しさと本質的な学び</h4>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                この経験で得た最大の学びは、単なる語学力以上の「協働の難しさ」です。翻訳アプリを使えば意思疎通は可能でしたが、議論の細かなニュアンスや熱量が失われ、プロジェクトの効率が落ちる瞬間を何度も経験しました。<br><br>
+                表面的な課題解決のアイデアを出すだけでなく、国境を越えてひとつのものを創り上げるプロセスに潜む「本質的な障壁」を肌で体験できたことは、私にとって大きな財産となっています。
+            </p>
+        </div>
+    </div>
+
+    <div id="modal-bosai"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#0f172a]/80 backdrop-blur-sm transition-opacity"
+        onclick="closeModal('modal-bosai')">
+        <div class="bg-white rounded-3xl p-8 md:p-10 max-w-2xl w-full mx-4 relative shadow-2xl border-4 border-[#1e3a8a] max-h-[90vh] overflow-y-auto"
+            onclick="event.stopPropagation()">
+
+            <button onclick="closeModal('modal-bosai')"
+                class="absolute top-4 right-6 text-slate-400 hover:text-[#38bdf8] text-3xl font-bold">&times;</button>
+
+            <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Poster Presentation</div>
+            <h3 class="text-2xl font-bold mb-6 text-[#1e3a8a]">世界防災フォーラム ポスター発表</h3>
+
+            <img src="Image/Image_Bosai.jpg" alt="Bosai Detail" class="w-full h-64 object-cover rounded-xl mb-6 shadow-sm">
+
+            <h4 class="font-bold text-slate-800 mb-2">📱 人と想いを繋げるリアルタイム救助アプリ「Shelperg」</h4>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                フォーラムでは、「誰一人取り残さないインクルーシブ防災」を目指して開発した救助アプリ『Shelperg（シェルパーグ）』についてポスター発表を行いました。<br><br>
+                このアプリは、災害時に助けを求める人が「HELPボタン」を押すだけで、位置情報が周囲のユーザーのマップに表示され、近くにいる人が迅速に「助ける意思表示」を行える仕組みです。単なるSOS発信にとどまらず、多様なユーザーに配慮した画面色補正やコンパス機能を搭載し、高い匿名性を保ちながら安全に使用できる設計にこだわりました。<br><br>
+                将来的には、より的確な救助活動を支援するため、建物内の「階層」や「服装情報」も共有できる機能の追加を見据えており、IT技術を用いた「共助」のアップデートを提案しました。
+            </p>
+
+            <h4 class="font-bold text-slate-800 mb-2">💡 専門家との対話で見えた「伝える」ことの本質</h4>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                この国際フォーラムを通じて最も痛感したのは、「伝える」ことの難しさです。私たちが開発した機能の理屈やメリットだけを順序立てて説明しても、その背景にある「誰一人取り残さない」という本当の思いまでは伝わりきらないという現実に直面しました。<br><br>
+                また、第一線で活躍する専門家の方々から鋭いフィードバックをいただいた際、いかに自分たちの視野が狭かったかを思い知らされました。自分たちの前提だけで語るのではなく、目の前の相手が「今、何を一番知りたいのか」を会話の中から瞬時にくみ取るスキルの重要性を深く学びました。<br><br>
+                「作って終わり」ではなく、社会にどう届けるか。この気づきは、今後の研究やシステム開発において、決して独りよがりにならないための大きな指針となっています。
+            </p>
+
+            <a href="https://worldbosaiforum.com/2025/news/expo_detail---id-935.html" target="_blank"
+                class="inline-flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-full font-bold hover:bg-[#38bdf8] transition shadow-md">
+                公式サイトで詳細を見る
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // モーダルを開く関数
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('modal-open');
+        }
+
+        // モーダルを閉じる関数
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }
+    </script>
+</body>
+
+</html>
