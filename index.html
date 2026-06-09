@@ -4,173 +4,993 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Connecting People & World</title>
+    <title>Portfolio | Nobuaki Imanaka — Connecting People &amp; World</title>
+    <meta name="description" content="今中伸顕のポートフォリオ。台湾国際PBL・世界防災フォーラム・高齢者会話研究など、社会課題と向き合う活動をまとめています。">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Shippori+Mincho:wght@400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ============================================
+           RESET & ROOT
+        ============================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #06060f;
+            --bg2:      #0c0c1e;
+            --surface:  #0f0f28;
+            --surface2: #161636;
+            --cyan:     #00e5ff;
+            --magenta:  #ff00cc;
+            --yellow:   #ffe600;
+            --green:    #00ff6e;
+            --text:     #dde0ff;
+            --text-dim: #7878aa;
+            --font-px:  'Press Start 2P', monospace;
+            --font-mono:'Share Tech Mono', monospace;
+            --font-vt:  'VT323', monospace;
+            --font-jp:  'Noto Sans JP', sans-serif;
+            --glow-c: 0 0 8px #00e5ff, 0 0 20px rgba(0,229,255,.35);
+            --glow-m: 0 0 8px #ff00cc, 0 0 20px rgba(255,0,204,.35);
+            --glow-y: 0 0 8px #ffe600, 0 0 20px rgba(255,230,0,.35);
+            --glow-g: 0 0 8px #00ff6e, 0 0 20px rgba(0,255,110,.35);
+        }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            scroll-behavior: smooth;
+            font-family: var(--font-jp);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
 
-        .hero-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #38bdf8 100%);
+        /* CRT scanlines */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px, transparent 3px,
+                rgba(0,0,0,.12) 3px, rgba(0,0,0,.12) 4px
+            );
+            pointer-events: none;
+            z-index: 9000;
         }
 
-        .card-hover {
-            border: 3px solid #1e3a8a;
-            box-shadow: 6px 6px 0px #1e3a8a;
-            background: #ffffff;
-            transition: 0.25s ease-in-out;
-        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--cyan); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--magenta); }
 
-        .card-hover:hover {
-            transform: translate(-3px, -3px);
-            box-shadow: 9px 9px 0px #38bdf8;
-            border-color: #38bdf8;
+        /* ============================================
+           LOADING SCREEN
+        ============================================ */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            transition: opacity .5s ease, visibility .5s ease;
         }
+        #loader.hide { opacity: 0; visibility: hidden; }
 
-        /* モーダル表示時の背景スクロール防止 */
-        body.modal-open {
+        .loader-title {
+            font-family: var(--font-px);
+            font-size: 13px;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+            letter-spacing: 4px;
+            animation: flicker 2.5s infinite;
+        }
+        .loader-bar-wrap {
+            width: 280px;
+            height: 18px;
+            border: 2px solid var(--cyan);
+            box-shadow: var(--glow-c);
+            position: relative;
             overflow: hidden;
+        }
+        .loader-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            width: 0;
+            animation: load-bar 1.8s ease-out forwards;
+            box-shadow: 0 0 12px var(--cyan);
+        }
+        .loader-pct {
+            font-family: var(--font-vt);
+            font-size: 22px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
+        @keyframes load-bar { to { width: 100%; } }
+
+        /* ============================================
+           ANIMATIONS
+        ============================================ */
+        @keyframes blink     { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes float     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes flicker   { 0%,100%{opacity:1} 92%{opacity:.85} 93%{opacity:.4} 94%{opacity:1} 97%{opacity:.7} 98%{opacity:1} }
+        @keyframes glitch-h  {
+            0%,89%,100%{ clip-path:none; transform:translate(0); }
+            90%{ clip-path:polygon(0 5%,100% 5%,100% 25%,0 25%); transform:translate(-6px,0); color:var(--magenta); }
+            91%{ clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%); transform:translate(6px,0); color:var(--cyan); }
+            92%{ clip-path:none; transform:translate(0); color:inherit; }
+            93%{ clip-path:polygon(0 35%,100% 35%,100% 55%,0 55%); transform:translate(-3px,0); }
+            94%{ clip-path:none; transform:translate(0); }
+        }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
+        @keyframes shimmer   { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        @keyframes pulse-border {
+            0%,100%{ box-shadow: 0 0 8px var(--cyan), inset 0 0 8px rgba(0,229,255,.05); }
+            50%{     box-shadow: 0 0 18px var(--cyan), inset 0 0 18px rgba(0,229,255,.10); }
+        }
+        @keyframes sparkle-out {
+            0%  { transform:translate(-50%,-50%) scale(0) rotate(0deg); opacity:1; }
+            100%{ transform:translate(-50%,-50%) scale(1.8) rotate(200deg); opacity:0; }
+        }
+
+        .blink  { animation: blink 1s step-end infinite; }
+        .float  { animation: float 3s ease-in-out infinite; }
+        .glitch { animation: glitch-h 5s infinite; }
+
+        /* Reveal on scroll */
+        .reveal { opacity:0; transform:translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+        .reveal.show { opacity:1; transform:translateY(0); }
+
+        /* ============================================
+           MARQUEE
+        ============================================ */
+        .marquee-bar {
+            overflow: hidden;
+            background: var(--surface);
+            border-top: 2px solid var(--cyan);
+            border-bottom: 2px solid var(--cyan);
+            padding: 9px 0;
+            box-shadow: 0 0 16px rgba(0,229,255,.2);
+        }
+        .marquee-track {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: marquee-move 22s linear infinite;
+            gap: 48px;
+        }
+        .marquee-track span {
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--cyan);
+            letter-spacing: 1px;
+        }
+        @keyframes marquee-move {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ============================================
+           NAV
+        ============================================ */
+        #nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 500;
+            background: rgba(6,6,15,.96);
+            border-bottom: 2px solid var(--cyan);
+            box-shadow: 0 2px 24px rgba(0,229,255,.25);
+            backdrop-filter: blur(10px);
+        }
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: var(--font-px);
+            font-size: 11px;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+            letter-spacing: 2px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--text-dim);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: color .2s, text-shadow .2s;
+        }
+        .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+
+        /* ============================================
+           HERO
+        ============================================ */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 128px 24px 80px;
+            background:
+                radial-gradient(ellipse 60% 50% at 15% 50%, rgba(0,229,255,.07) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 85% 20%, rgba(255,0,204,.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 50% 90%, rgba(0,255,110,.04) 0%, transparent 70%),
+                var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Dot grid */
+        #hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(0,229,255,.12) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        /* Corner brackets */
+        .corner {
+            position: absolute;
+            width: 56px; height: 56px;
+            border-color: var(--cyan);
+            border-style: solid;
+            box-shadow: var(--glow-c);
+        }
+        .corner.tl { top:76px; left:20px; border-width:3px 0 0 3px; }
+        .corner.tr { top:76px; right:20px; border-width:3px 3px 0 0; }
+        .corner.bl { bottom:20px; left:20px; border-width:0 0 3px 3px; }
+        .corner.br { bottom:20px; right:20px; border-width:0 3px 3px 0; }
+
+        /* Floating decoration shapes */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            pointer-events: none;
+            opacity: .18;
+        }
+        .deco-circle.c1 { width:220px;height:220px; top:80px; right:8%; border-color:var(--magenta); animation:spin-slow 18s linear infinite; }
+        .deco-circle.c2 { width:120px;height:120px; bottom:15%; left:6%; border-color:var(--yellow); animation:spin-slow 12s linear infinite reverse; }
+
+        .hero-badge {
+            display: inline-block;
+            border: 1px solid var(--cyan);
+            background: rgba(0,229,255,.07);
+            color: var(--cyan);
+            font-family: var(--font-px);
+            font-size: 8px;
+            padding: 8px 18px;
+            letter-spacing: 3px;
+            margin-bottom: 28px;
+            text-shadow: var(--glow-c);
+            animation: pulse-border 2.5s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-family: var(--font-jp);
+            font-weight: 700;
+            font-size: clamp(2rem, 5.5vw, 3.6rem);
+            line-height: 1.5;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .hero-en {
+            font-family: var(--font-px);
+            font-size: 10px;
+            color: var(--magenta);
+            text-shadow: var(--glow-m);
+            letter-spacing: 5px;
+            margin-bottom: 36px;
+        }
+
+        .hero-desc {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            color: var(--text-dim);
+            max-width: 580px;
+            line-height: 1.85;
+            margin-bottom: 52px;
+        }
+        .hero-desc .hl { color: var(--cyan); }
+
+        .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+        /* ============================================
+           PIXEL BUTTONS
+        ============================================ */
+        .btn {
+            font-family: var(--font-px);
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding: 14px 28px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform .12s, box-shadow .12s;
+        }
+        .btn-primary {
+            background: var(--cyan);
+            color: var(--bg);
+            box-shadow: 5px 5px 0 var(--magenta);
+        }
+        .btn-primary:hover  { transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--magenta); }
+        .btn-primary:active { transform:translate(2px,2px);   box-shadow:3px 3px 0 var(--magenta); }
+        .btn-outline {
+            background: transparent;
+            color: var(--yellow);
+            border: 2px solid var(--yellow);
+            box-shadow: 5px 5px 0 rgba(255,230,0,.3);
+        }
+        .btn-outline:hover  { background:rgba(255,230,0,.08); transform:translate(-3px,-3px); box-shadow:8px 8px 0 rgba(255,230,0,.4); }
+        .btn-outline:active { transform:translate(2px,2px); box-shadow:3px 3px 0 rgba(255,230,0,.4); }
+
+        /* ============================================
+           SECTION SCAFFOLD
+        ============================================ */
+        section { padding: 80px 24px; }
+        .inner  { max-width: 1100px; margin: 0 auto; }
+
+        .sec-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 48px;
+        }
+        .sec-num  { font-family:var(--font-px); font-size:10px; color:var(--magenta); text-shadow:var(--glow-m); }
+        .sec-title{ font-family:var(--font-px); font-size:clamp(11px,2vw,16px); letter-spacing:2px; }
+        .sec-line { flex:1; height:1px; }
+        .sec-line.cyan    { background:linear-gradient(to right,var(--cyan),transparent); }
+        .sec-line.magenta { background:linear-gradient(to right,var(--magenta),transparent); }
+        .sec-line.yellow  { background:linear-gradient(to right,var(--yellow),transparent); }
+
+        /* ============================================
+           ABOUT
+        ============================================ */
+        #about { background: var(--bg2); }
+
+        .about-card {
+            border: 2px solid var(--cyan);
+            background: var(--surface);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 32px rgba(0,229,255,.10), inset 0 0 32px rgba(0,229,255,.03);
+            animation: pulse-border 3s ease-in-out infinite;
+        }
+        .about-card::before {
+            content: '[ PROFILE.EXE ]';
+            position: absolute;
+            top: -13px; left: 20px;
+            background: var(--bg2);
+            padding: 0 8px;
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+        }
+        /* Online indicator */
+        .about-card::after {
+            content: '';
+            position: absolute;
+            top: 10px; right: 12px;
+            width: 9px; height: 9px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: var(--glow-g);
+            animation: blink 2.2s step-end infinite;
+        }
+
+        .about-grid {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .about-avatar {
+            flex-shrink: 0;
+            width: 160px; height: 160px;
+            border: 3px solid var(--magenta);
+            box-shadow: 0 0 22px rgba(255,0,204,.4), 7px 7px 0 var(--cyan);
+            overflow: hidden;
+            position: relative;
+        }
+        .about-avatar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: saturate(.85) contrast(1.1);
+        }
+        .about-avatar::after {
+            content: '▶ ONLINE';
+            position: absolute;
+            bottom:0; left:0; right:0;
+            background: rgba(0,255,110,.88);
+            color: #000;
+            font-family: var(--font-px);
+            font-size: 7px;
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .about-name {
+            font-family: var(--font-px);
+            font-size: 14px;
+            color: var(--yellow);
+            text-shadow: var(--glow-y);
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+        }
+        .about-text {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.85;
+        }
+        .about-text .cm  { color: var(--text-dim); }
+        .about-text .kw  { color: var(--cyan); }
+        .about-text .str { color: var(--yellow); }
+
+        .tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+        .tag  {
+            font-family: var(--font-px);
+            font-size: 8px;
+            padding: 5px 10px;
+            border: 1px solid;
+            letter-spacing: 1px;
+        }
+        .tag.c  { border-color:var(--cyan);    color:var(--cyan);    background:rgba(0,229,255,.07); }
+        .tag.m  { border-color:var(--magenta); color:var(--magenta); background:rgba(255,0,204,.07); }
+        .tag.y  { border-color:var(--yellow);  color:var(--yellow);  background:rgba(255,230,0,.07); }
+        .tag.g  { border-color:var(--green);   color:var(--green);   background:rgba(0,255,110,.07); }
+
+        /* ============================================
+           PROJECTS
+        ============================================ */
+        #projects {
+            background: var(--bg);
+            position: relative;
+        }
+        #projects::before {
+            content:'';
+            position:absolute; inset:0;
+            background-image: radial-gradient(circle, rgba(255,0,204,.07) 1px, transparent 1px);
+            background-size: 26px 26px;
+            pointer-events: none;
+        }
+
+        .proj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .proj-card {
+            border: 2px solid var(--surface2);
+            background: var(--surface);
+            cursor: pointer;
+            position: relative;
+            transition: border-color .3s, box-shadow .3s, transform .3s;
+            overflow: hidden;
+        }
+        .proj-card::before {
+            content:'';
+            position:absolute; inset:0;
+            background:linear-gradient(135deg,rgba(0,229,255,.05),rgba(255,0,204,.05));
+            opacity:0;
+            transition: opacity .3s;
+        }
+        .proj-card:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 28px rgba(0,229,255,.2), 7px 7px 0 var(--magenta);
+            transform: translate(-4px,-4px);
+        }
+        .proj-card:hover::before { opacity:1; }
+
+        .proj-img-wrap {
+            height: 200px;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+        .proj-img-wrap img {
+            width:100%; height:100%;
+            object-fit: cover;
+            opacity:0;
+            transition: opacity .6s;
+            filter: saturate(.7) contrast(1.2);
+        }
+        .proj-card:hover .proj-img-wrap img { opacity:1; }
+
+        .proj-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity .5s;
+        }
+        .proj-card:hover .proj-placeholder { opacity:0; }
+
+        .proj-placeholder-text {
+            font-family: var(--font-px);
+            font-size: 10px;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+            text-align: center;
+            line-height: 2;
+            padding: 16px;
+        }
+
+        .proj-hint {
+            position: absolute;
+            bottom:8px; right:10px;
+            font-family: var(--font-px);
+            font-size: 8px;
+            color: var(--yellow);
+            text-shadow: var(--glow-y);
+            opacity:0;
+            transition: opacity .3s;
+        }
+        .proj-card:hover .proj-hint { opacity:1; }
+
+        .proj-body { padding: 24px; }
+
+        .proj-cat {
+            font-family: var(--font-px);
+            font-size: 8px;
+            color: var(--magenta);
+            text-shadow: var(--glow-m);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+        .proj-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .proj-desc {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.75;
+        }
+
+        /* ============================================
+           RESEARCH
+        ============================================ */
+        #research { background: var(--bg2); }
+
+        .res-card {
+            border: 2px solid var(--magenta);
+            background: var(--surface);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 28px rgba(255,0,204,.10);
+        }
+        .res-card::before {
+            content: '[ RESEARCH.DAT ]';
+            position: absolute;
+            top: -13px; left: 20px;
+            background: var(--bg2);
+            padding: 0 8px;
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--magenta);
+            text-shadow: var(--glow-m);
+        }
+
+        .res-head { display:flex; gap:20px; align-items:flex-start; margin-bottom:28px; }
+
+        .res-icon {
+            width: 58px; height: 58px;
+            border: 2px solid var(--yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            box-shadow: var(--glow-y);
+        }
+        .res-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .res-kw {
+            font-family: var(--font-px);
+            font-size: 8px;
+            color: var(--yellow);
+            text-shadow: var(--glow-y);
+            letter-spacing: 1px;
+        }
+
+        .res-body {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.85;
+        }
+        .res-list { list-style:none; margin-top:16px; }
+        .res-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--surface2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .res-list li::before { content:'▶'; color:var(--magenta); font-size:10px; flex-shrink:0; }
+
+        /* ============================================
+           HOBBIES
+        ============================================ */
+        #hobbies { background: var(--bg); }
+
+        .hob-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .hob-card {
+            border: 2px solid var(--surface2);
+            background: var(--surface);
+            padding: 36px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all .3s;
+            cursor: default;
+        }
+        .hob-card::after {
+            content:'';
+            position:absolute; inset:0;
+            background:linear-gradient(135deg,rgba(255,230,0,0),rgba(0,229,255,0));
+            transition: background .3s;
+        }
+        .hob-card:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 0 20px rgba(255,230,0,.2), 5px 5px 0 var(--yellow);
+            transform: translate(-3px,-3px);
+        }
+        .hob-card:hover::after {
+            background:linear-gradient(135deg,rgba(255,230,0,.05),rgba(0,229,255,.05));
+        }
+        .hob-emoji {
+            display: block;
+            font-size: 42px;
+            margin-bottom: 16px;
+            transition: transform .3s;
+            position: relative;
+            z-index: 1;
+        }
+        .hob-card:hover .hob-emoji { transform:scale(1.25) rotate(-8deg); }
+        .hob-name {
+            font-family: var(--font-px);
+            font-size: 10px;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+            margin-bottom: 10px;
+            position: relative; z-index:1;
+        }
+        .hob-desc {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-dim);
+            position: relative; z-index:1;
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        footer {
+            background: var(--bg2);
+            border-top: 2px solid var(--surface2);
+            padding: 52px 24px;
+            text-align: center;
+        }
+        .footer-art {
+            font-family: var(--font-vt);
+            font-size: 17px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+        .footer-links { display:flex; justify-content:center; gap:32px; margin-bottom:20px; }
+        .footer-links a {
+            font-family: var(--font-px);
+            font-size: 10px;
+            color: var(--cyan);
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: color .2s, text-shadow .2s;
+        }
+        .footer-links a:hover { color:var(--magenta); text-shadow:var(--glow-m); }
+        .footer-copy {
+            font-family: var(--font-px);
+            font-size: 8px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           MODALS
+        ============================================ */
+        .modal-ov {
+            position: fixed;
+            inset: 0;
+            z-index: 800;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(6,6,15,.93);
+            backdrop-filter: blur(6px);
+        }
+        .modal-ov.open { display:flex; }
+
+        .modal-box {
+            background: var(--surface);
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 40px rgba(0,229,255,.25), 9px 9px 0 var(--magenta);
+            max-width: 700px;
+            width: calc(100% - 40px);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-bar {
+            position: sticky;
+            top: 0;
+            background: var(--cyan);
+            padding: 9px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index:1;
+        }
+        .modal-bar-title {
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--bg);
+            letter-spacing: 2px;
+        }
+        .modal-x {
+            font-family: var(--font-px);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--cyan);
+            border: none;
+            padding: 4px 10px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: background .2s, color .2s;
+        }
+        .modal-x:hover { background:var(--magenta); color:#fff; }
+
+        .modal-body { padding: 32px; }
+        .modal-body img {
+            width: 100%; height: 240px;
+            object-fit: cover;
+            margin-bottom: 24px;
+            border: 2px solid var(--surface2);
+            filter: saturate(.8) contrast(1.1);
+        }
+        .modal-stitle {
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--yellow);
+            text-shadow: var(--glow-y);
+            letter-spacing: 2px;
+            margin: 24px 0 10px;
+        }
+        .modal-text {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.85;
+        }
+        .modal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 28px;
+            font-family: var(--font-px);
+            font-size: 9px;
+            color: var(--bg);
+            background: var(--cyan);
+            padding: 14px 22px;
+            text-decoration: none;
+            letter-spacing: 1px;
+            box-shadow: 5px 5px 0 var(--magenta);
+            transition: transform .15s, box-shadow .15s;
+        }
+        .modal-btn:hover { transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--magenta); }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 768px) {
+            .nav-links       { display:none; }
+            .corner          { display:none; }
+            .deco-circle     { display:none; }
+            .about-grid      { flex-direction:column; align-items:center; }
         }
     </style>
 </head>
 
-<body class="text-slate-900 bg-slate-50">
+<body>
 
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b-4 border-[#1e3a8a]">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="font-bold text-xl tracking-tight text-[#1e3a8a]">MY PORTFOLIO</div>
-            <div class="hidden md:flex space-x-8 text-sm font-medium">
-                <a href="#about" class="hover:text-[#38bdf8] transition">About</a>
-                <a href="#projects" class="hover:text-[#38bdf8] transition">Activities</a>
-                <a href="#research" class="hover:text-[#38bdf8] transition">Research</a>
-                <a href="#hobbies" class="hover:text-[#38bdf8] transition">Hobbies</a>
-            </div>
+    <!-- ====== LOADER ====== -->
+    <div id="loader">
+        <div class="loader-title">LOADING PORTFOLIO<span class="blink">_</span></div>
+        <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+        <div class="loader-pct" id="loader-pct">0%</div>
+    </div>
+
+    <!-- ====== NAV ====== -->
+    <nav id="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">N.IMANAKA<span class="blink">_</span></div>
+            <ul class="nav-links">
+                <li><a href="#about"    id="nav-about">ABOUT</a></li>
+                <li><a href="#projects" id="nav-proj">ACTIVITIES</a></li>
+                <li><a href="#research" id="nav-res">RESEARCH</a></li>
+                <li><a href="#hobbies"  id="nav-hob">HOBBIES</a></li>
+            </ul>
         </div>
     </nav>
 
-    <header class="pt-32 pb-20 hero-gradient text-white">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <div
-                class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold mb-4 tracking-widest uppercase border border-white/30">
-                Global PBL | Disaster Prevention | Research
-            </div>
+    <!-- ====== MARQUEE ====== -->
+    <div class="marquee-bar" style="margin-top:56px;">
+        <div class="marquee-track">
+            <span>★ PORTFOLIO 2025</span>
+            <span>◆ INTERNATIONAL PBL TAIWAN</span>
+            <span>★ WORLD BOSAI FORUM 2025</span>
+            <span>◆ CONVERSATION ANALYSIS</span>
+            <span>★ ELDERLY COMMUNICATION</span>
+            <span>◆ DISASTER PREVENTION</span>
+            <span>★ JUDO &amp; CYCLING</span>
+            <span>◆ CONNECTING PEOPLE &amp; WORLD</span>
+            <!-- duplicate for seamless loop -->
+            <span>★ PORTFOLIO 2025</span>
+            <span>◆ INTERNATIONAL PBL TAIWAN</span>
+            <span>★ WORLD BOSAI FORUM 2025</span>
+            <span>◆ CONVERSATION ANALYSIS</span>
+            <span>★ ELDERLY COMMUNICATION</span>
+            <span>◆ DISASTER PREVENTION</span>
+            <span>★ JUDO &amp; CYCLING</span>
+            <span>◆ CONNECTING PEOPLE &amp; WORLD</span>
+        </div>
+    </div>
 
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                人と社会をつなぐ視点で、<br>課題と向き合う。
-            </h1>
+    <!-- ====== HERO ====== -->
+    <header id="hero">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="deco-circle c1"></div>
+        <div class="deco-circle c2"></div>
 
-            <p class="text-slate-200 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
-                台湾での国際PBLプロジェクトや世界防災フォーラムでの発表、<br>
-                そして高齢者の日常会話コミュニケーションに関する研究などに取り組んできました。<br>
-                現場での経験と研究を行き来しながら、社会の課題を多角的に捉えることを目指しています。
-            </p>
+        <div class="hero-badge">▶ EST. 2025 // PORTFOLIO.EXE ◀</div>
 
-            <div class="flex justify-center gap-4">
-                <a href="#projects"
-                    class="bg-[#1e3a8a] hover:bg-[#38bdf8] px-8 py-3 rounded-full font-bold transition shadow-lg">
-                    活動実績を見る
-                </a>
-                <a href="#research"
-                    class="border border-white/30 hover:bg-white/10 px-8 py-3 rounded-full font-bold transition">
-                    研究内容
-                </a>
-            </div>
+        <h1 class="hero-title glitch">
+            人と社会をつなぐ視点で、<br>課題と向き合う。
+        </h1>
+
+        <p class="hero-en">CONNECTING PEOPLE &amp; WORLD</p>
+
+        <p class="hero-desc">
+            <span class="hl">// 台湾国際PBL</span>・<span class="hl">世界防災フォーラム</span>・<span class="hl">高齢者会話研究</span><br>
+            現場と研究を行き来しながら、社会課題を多角的に捉える。<br>
+            「動くこと」と「考えること」の両輪で前へ進む。
+        </p>
+
+        <div class="hero-btns">
+            <a href="#projects" class="btn btn-primary" id="hero-btn-act">▶ ACTIVITIES</a>
+            <a href="#research" class="btn btn-outline"  id="hero-btn-res">◆ RESEARCH</a>
         </div>
     </header>
 
-    <section id="about" class="py-20 bg-white">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div
-                    class="w-48 h-48 bg-slate-200 rounded-2xl flex-shrink-0 overflow-hidden shadow-inner border border-slate-100">
-                    <img src="Image\Image_AboutMe.jpg" alt="About Me Image" class="w-full h-full object-cover">
+    <!-- ====== ABOUT ====== -->
+    <section id="about">
+        <div class="inner">
+            <div class="sec-head reveal">
+                <span class="sec-num">01</span>
+                <h2 class="sec-title neon-cyan" style="color:var(--cyan);text-shadow:var(--glow-c);">ABOUT_ME</h2>
+                <div class="sec-line cyan"></div>
+            </div>
+            <div class="about-card reveal">
+                <div class="about-grid">
+                    <div class="about-avatar float">
+                        <img src="Image/Image_AboutMe.jpg" alt="今中伸顕">
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                        <div class="about-name">NOBUAKI IMANAKA<span class="blink" style="color:var(--cyan);">_</span></div>
+                        <div class="about-text">
+                            <span class="cm">// 今中 伸顕 — モットー</span><br>
+                            <span class="kw">「現場に足を運び、</span><span class="str">対話から本質を探る</span><span class="kw">」</span><br><br>
+                            台湾での国際PBLでは多様なバックグラウンドの仲間と協働し、
+                            技術がリアルな社会課題にどう貢献できるかを追求しました。<br><br>
+                            現在は<span class="kw">高齢者の音声対話システム</span>の開発に注力。
+                            超高齢社会において「円滑なコミュニケーション」を実現するため、
+                            実際の会話データから分析とシステム実装を並走させています。
+                        </div>
+                        <div class="tags">
+                            <span class="tag c">JUDO</span>
+                            <span class="tag m">GLOBAL PBL</span>
+                            <span class="tag y">RESEARCH</span>
+                            <span class="tag g">CYCLING</span>
+                            <span class="tag c">DISASTER PREVENTION</span>
+                            <span class="tag m">ELDERLY CARE</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-    <h2 class="text-3xl font-bold mb-6 text-[#0f172a] flex items-center">
-        <span class="mr-2">👤</span> About Me
-    </h2>
-    
-    <div class="space-y-4">
-        <p class="text-slate-700 leading-relaxed font-medium">
-            今中 伸顕 / Nobuaki Imanaka
-        </p>
-        
-        <p class="text-slate-600 leading-relaxed">
-            「現場に足を運び、対話から本質を探る」をモットーに、技術の社会実装を目指しています。
-            台湾での国際PBLでは、多様なバックグラウンドを持つ仲間と協働し、技術がリアルな社会課題にどう貢献できるかを追求しました。
-        </p>
-
-        <p class="text-slate-600 leading-relaxed">
-            現在は大学での研究として、**高齢者の音声対話システム**の開発に注力しています。
-            超高齢社会において、単なる自動応答ではない「円滑なコミュニケーション」を実現するため、
-            実際の会話データから高齢者特有の対話パターンの解析とシステム実装の両面からアプローチしています。
-        </p>
-
-        <p class="text-slate-600 leading-relaxed italic border-l-4 border-slate-200 pl-4">
-            「動くこと（現場・実装）」と「考えること（分析・研究）」の双方を大切にする、行動派のリサーチャーを目指しています。
-        </p>
-    </div>
-</div>
             </div>
         </div>
     </section>
 
-    <section id="projects" class="py-20 bg-slate-50">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-12 text-center text-[#0f172a]">Featured Activities</h2>
-            <div class="grid md:grid-cols-2 gap-8">
+    <!-- ====== PROJECTS ====== -->
+    <section id="projects">
+        <div class="inner">
+            <div class="sec-head reveal">
+                <span class="sec-num">02</span>
+                <h2 class="sec-title" style="color:var(--magenta);text-shadow:var(--glow-m);">FEATURED_ACTIVITIES</h2>
+                <div class="sec-line magenta"></div>
+            </div>
+            <div class="proj-grid">
 
-                <div class="rounded-2xl overflow-hidden card-hover group cursor-pointer"
-                    onclick="openModal('modal-pbl')">
-                    <div class="h-48 relative overflow-hidden bg-[#0f172a]">
-                        <img src="Image\Image_PBL.jpg" alt="PBL"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out">
-                        <div
-                            class="absolute inset-0 flex items-center justify-center p-6 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-700 ease-in-out">
-                            <span class="text-white font-bold text-xl">International PBL in Taiwan</span>
+                <div class="proj-card reveal" id="card-pbl" onclick="openModal('modal-pbl')" role="button" tabindex="0" aria-label="台湾PBLの詳細を見る">
+                    <div class="proj-img-wrap">
+                        <img src="Image/Image_PBL.jpg" alt="台湾PBL">
+                        <div class="proj-placeholder">
+                            <div class="proj-placeholder-text">
+                                ✈ INTERNATIONAL<br>PBL IN TAIWAN
+                            </div>
                         </div>
-                        <div
-                            class="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                            <span class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">クリックで詳細 ＋</span>
-                        </div>
+                        <span class="proj-hint">[ CLICK + ]</span>
                     </div>
-                    <div class="p-8">
-                        <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Global Experience
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 text-[#1e3a8a]">台湾での国際PBL（プロジェクト学習）</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            台湾の大学との共同プロジェクトに参加。言語や文化の壁を越え、現地のニーズに基づいたソリューション提案を行いました。
-                        </p>
+                    <div class="proj-body">
+                        <div class="proj-cat">◆ GLOBAL EXPERIENCE</div>
+                        <h3 class="proj-title">台湾での国際PBL（プロジェクト学習）</h3>
+                        <p class="proj-desc">台湾の大学との共同プロジェクトに参加。言語・文化の壁を越え、現地ニーズに基づいたソリューション提案を行いました。</p>
                     </div>
                 </div>
 
-                <div class="rounded-2xl overflow-hidden card-hover group cursor-pointer"
-                    onclick="openModal('modal-bosai')">
-                    <div class="h-48 relative overflow-hidden bg-[#1e3a8a]">
-                        <img src="Image/Image_Bosai.jpg" alt="World Bosai Forum"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out">
-                        <div
-                            class="absolute inset-0 flex items-center justify-center p-6 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-700 ease-in-out">
-                            <span class="text-white font-bold text-xl">World Bosai Forum 2025</span>
+                <div class="proj-card reveal" id="card-bosai" onclick="openModal('modal-bosai')" role="button" tabindex="0" aria-label="世界防災フォーラムの詳細を見る">
+                    <div class="proj-img-wrap">
+                        <img src="Image/Image_Bosai.jpg" alt="世界防災フォーラム">
+                        <div class="proj-placeholder">
+                            <div class="proj-placeholder-text">
+                                ◆ WORLD<br>BOSAI FORUM 2025
+                            </div>
                         </div>
-                        <div
-                            class="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                            <span class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">クリックで詳細 ＋</span>
-                        </div>
+                        <span class="proj-hint">[ CLICK + ]</span>
                     </div>
-                    <div class="p-8">
-                        <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Poster Presentation
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 text-[#1e3a8a]">世界防災フォーラム ポスター発表</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            国際的なフォーラムにて、防災に関する研究成果をポスター形式で発表しました。
-                        </p>
+                    <div class="proj-body">
+                        <div class="proj-cat">◆ POSTER PRESENTATION</div>
+                        <h3 class="proj-title">世界防災フォーラム ポスター発表</h3>
+                        <p class="proj-desc">国際的なフォーラムにて、防災に関する研究成果をポスター形式で発表しました。</p>
                     </div>
                 </div>
 
@@ -178,28 +998,25 @@
         </div>
     </section>
 
-    <section id="research" class="py-20 bg-white">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-[#0f172a]">University Research</h2>
-            <div class="bg-slate-50 p-8 md:p-12 rounded-3xl border border-slate-200">
-                <div class="flex items-start gap-6 mb-6">
-                    <div class="bg-[#1e3a8a] text-white p-3 rounded-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
+    <!-- ====== RESEARCH ====== -->
+    <section id="research">
+        <div class="inner">
+            <div class="sec-head reveal">
+                <span class="sec-num">03</span>
+                <h2 class="sec-title" style="color:var(--yellow);text-shadow:var(--glow-y);">UNIVERSITY_RESEARCH</h2>
+                <div class="sec-line yellow"></div>
+            </div>
+            <div class="res-card reveal">
+                <div class="res-head">
+                    <div class="res-icon">💡</div>
                     <div>
-                        <h3 class="text-2xl font-bold mb-2 text-[#0f172a]">高齢者の会話特徴に関する研究</h3>
-                        <p class="text-[#38bdf8] font-bold">Keywords: 会話分析, 音声コミュニケーション, 超高齢社会</p>
+                        <h3 class="res-title">高齢者の会話特徴に関する研究</h3>
+                        <div class="res-kw">Keywords: 会話分析 / 音声コミュニケーション / 超高齢社会</div>
                     </div>
                 </div>
-                <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed">
-                    <p class="mb-4">
-                        大学では、高齢者同士や多世代間の円滑なコミュニケーションを支援するため、会話の特徴を定量的・定性的に分析しています。
-                    </p>
-                    <ul class="list-disc pl-5 space-y-2">
+                <div class="res-body">
+                    <p>大学では、高齢者同士や多世代間の円滑なコミュニケーションを支援するため、会話の特徴を定量的・定性的に分析しています。</p>
+                    <ul class="res-list">
                         <li>会話のテンポ、相槌、話題の遷移パターンの抽出</li>
                         <li>認知機能や孤独感と会話特徴の相関調査</li>
                         <li>コミュニケーション活性化のためのシステム提案</li>
@@ -209,124 +1026,190 @@
         </div>
     </section>
 
-    <section id="hobbies" class="py-20 bg-slate-50 text-slate-900">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-12 text-center text-[#0f172a]">Interests & Hobbies</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="p-8 text-center card-hover rounded-2xl">
-                    <div class="text-4xl mb-4">🥋</div>
-                    <h3 class="font-bold mb-2 text-[#1e3a8a]">柔道</h3>
-                    <p class="text-xs text-slate-500">心身を律し、礼を学ぶ</p>
+    <!-- ====== HOBBIES ====== -->
+    <section id="hobbies">
+        <div class="inner">
+            <div class="sec-head reveal">
+                <span class="sec-num">04</span>
+                <h2 class="sec-title" style="color:var(--green);text-shadow:var(--glow-g);">INTERESTS_&amp;_HOBBIES</h2>
+                <div class="sec-line" style="background:linear-gradient(to right,var(--green),transparent);"></div>
+            </div>
+            <div class="hob-grid">
+                <div class="hob-card reveal">
+                    <span class="hob-emoji">🥋</span>
+                    <div class="hob-name">JUDO</div>
+                    <div class="hob-desc">心身を律し、礼を学ぶ</div>
                 </div>
-                <div class="p-8 text-center card-hover rounded-2xl">
-                    <div class="text-4xl mb-4">🚲</div>
-                    <h3 class="font-bold mb-2 text-[#1e3a8a]">サイクリング</h3>
-                    <p class="text-xs text-slate-500">風を切って進む爽快感</p>
+                <div class="hob-card reveal">
+                    <span class="hob-emoji">🚲</span>
+                    <div class="hob-name">CYCLING</div>
+                    <div class="hob-desc">風を切って進む爽快感</div>
                 </div>
-                <div class="p-8 text-center card-hover rounded-2xl">
-                    <div class="text-4xl mb-4">🗺️</div>
-                    <h3 class="font-bold mb-2 text-[#1e3a8a]">散歩・冒険</h3>
-                    <p class="text-xs text-slate-500">知らない街の発見を楽しむ</p>
+                <div class="hob-card reveal">
+                    <span class="hob-emoji">🗺️</span>
+                    <div class="hob-name">ADVENTURE</div>
+                    <div class="hob-desc">知らない街の発見を楽しむ</div>
                 </div>
-                <div class="p-8 text-center card-hover rounded-2xl">
-                    <div class="text-4xl mb-4">✈️</div>
-                    <h3 class="font-bold mb-2 text-[#1e3a8a]">旅行</h3>
-                    <p class="text-xs text-slate-500">新しい景色と価値観との出会い</p>
+                <div class="hob-card reveal">
+                    <span class="hob-emoji">✈️</span>
+                    <div class="hob-name">TRAVEL</div>
+                    <div class="hob-desc">新しい景色と価値観との出会い</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-12 bg-[#0f172a] text-slate-400">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <div class="flex justify-center space-x-6 mb-8">
-                <a href="https://www.linkedin.com/in/%E4%BC%B8%E9%A1%95-%E4%BB%8A%E4%B8%AD-23bab2353/" target="_blank"
-                    class="hover:text-[#38bdf8] transition">LinkedIn</a>
-            </div>
-            <p class="text-sm">© 2025 Nobuaki Imanaka</p>
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="footer-art">
+            ┌──────────────────────────────┐<br>
+            │  THANK YOU FOR VISITING ✦    │<br>
+            └──────────────────────────────┘
         </div>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/%E4%BC%B8%E9%A1%95-%E4%BB%8A%E4%B8%AD-23bab2353/" target="_blank" rel="noopener" id="footer-linkedin">LINKEDIN</a>
+        </div>
+        <div class="footer-copy">© 2025 NOBUAKI IMANAKA // ALL RIGHTS RESERVED<span class="blink" style="margin-left:4px;">_</span></div>
     </footer>
 
-    <div id="modal-pbl"
-        class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#0f172a]/80 backdrop-blur-sm transition-opacity"
-        onclick="closeModal('modal-pbl')">
-        <div class="bg-white rounded-3xl p-8 md:p-10 max-w-2xl w-full mx-4 relative shadow-2xl border-4 border-[#1e3a8a] max-h-[90vh] overflow-y-auto"
-            onclick="event.stopPropagation()">
-
-            <button onclick="closeModal('modal-pbl')"
-                class="absolute top-4 right-6 text-slate-400 hover:text-[#38bdf8] text-3xl font-bold">&times;</button>
-
-            <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Global Experience</div>
-            <h3 class="text-2xl font-bold mb-6 text-[#1e3a8a]">台湾での国際PBL（プロジェクト学習）</h3>
-
-            <img src="Image/Image_PBL.jpg" alt="PBL Detail" class="w-full h-64 object-cover rounded-xl mb-6 shadow-sm">
-
-            <h4 class="font-bold text-slate-800 mb-2">✈️ 異文化PBLで掴んだ、課題解決のリアル</h4>
-            <p class="text-slate-600 leading-relaxed mb-6">
-                台湾の雲林で「高齢者が抱える問題」をテーマにした国際PBL（プロジェクト型学習）に参加しました。現地の学生とチームを組み、実際に自転車で地域を散策してフィールドワークを実施。そこで目の当たりにしたのは、広大な田畑に家が点在して移動自体が困難な状況と、若者の都市流出によって生まれる「高齢者の孤独」でした。<br><br>
-                日本の地方課題とも重なるこの「外出困難な高齢者の孤独」という根深い問題に対し、私たちはITの力で解決すべく「通話アプリ」の企画・提案を行いました。
-            </p>
-
-            <h4 class="font-bold text-slate-800 mb-2">🤝 協働の難しさと本質的な学び</h4>
-            <p class="text-slate-600 leading-relaxed mb-6">
-                この経験で得た最大の学びは、単なる語学力以上の「協働の難しさ」です。翻訳アプリを使えば意思疎通は可能でしたが、議論の細かなニュアンスや熱量が失われ、プロジェクトの効率が落ちる瞬間を何度も経験しました。<br><br>
-                表面的な課題解決のアイデアを出すだけでなく、国境を越えてひとつのものを創り上げるプロセスに潜む「本質的な障壁」を肌で体験できたことは、私にとって大きな財産となっています。
-            </p>
+    <!-- ====== MODAL: PBL ====== -->
+    <div id="modal-pbl" class="modal-ov" onclick="closeModal('modal-pbl')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-bar">
+                <span class="modal-bar-title">★ GLOBAL_EXPERIENCE.EXE</span>
+                <button class="modal-x" onclick="closeModal('modal-pbl')" id="close-pbl">[X] CLOSE</button>
+            </div>
+            <div class="modal-body">
+                <img src="Image/Image_PBL.jpg" alt="PBL 台湾">
+                <div class="modal-stitle">◆ 台湾での国際PBL（プロジェクト学習）</div>
+                <div class="modal-stitle">✈ 異文化PBLで掴んだ、課題解決のリアル</div>
+                <p class="modal-text">
+                    台湾の雲林で「高齢者が抱える問題」をテーマにした国際PBLに参加しました。現地の学生とチームを組み、実際に自転車で地域を散策してフィールドワークを実施。広大な田畑に家が点在して移動自体が困難な状況と、若者の都市流出によって生まれる「高齢者の孤独」を目の当たりにしました。<br><br>
+                    日本の地方課題とも重なるこの問題に対し、ITの力で解決すべく「通話アプリ」の企画・提案を行いました。
+                </p>
+                <div class="modal-stitle">🤝 協働の難しさと本質的な学び</div>
+                <p class="modal-text">
+                    この経験で得た最大の学びは、単なる語学力以上の「協働の難しさ」です。翻訳アプリを使えば意思疎通は可能でしたが、議論の細かなニュアンスや熱量が失われ、プロジェクトの効率が落ちる瞬間を何度も経験しました。<br><br>
+                    国境を越えてひとつのものを創り上げるプロセスに潜む「本質的な障壁」を肌で体験できたことは、今後の大きな財産となっています。
+                </p>
+            </div>
         </div>
     </div>
 
-    <div id="modal-bosai"
-        class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#0f172a]/80 backdrop-blur-sm transition-opacity"
-        onclick="closeModal('modal-bosai')">
-        <div class="bg-white rounded-3xl p-8 md:p-10 max-w-2xl w-full mx-4 relative shadow-2xl border-4 border-[#1e3a8a] max-h-[90vh] overflow-y-auto"
-            onclick="event.stopPropagation()">
-
-            <button onclick="closeModal('modal-bosai')"
-                class="absolute top-4 right-6 text-slate-400 hover:text-[#38bdf8] text-3xl font-bold">&times;</button>
-
-            <div class="text-xs font-bold text-[#38bdf8] mb-2 tracking-widest uppercase">Poster Presentation</div>
-            <h3 class="text-2xl font-bold mb-6 text-[#1e3a8a]">世界防災フォーラム ポスター発表</h3>
-
-            <img src="Image/Image_Bosai.jpg" alt="Bosai Detail" class="w-full h-64 object-cover rounded-xl mb-6 shadow-sm">
-
-            <h4 class="font-bold text-slate-800 mb-2">📱 人と想いを繋げるリアルタイム救助アプリ「Shelperg」</h4>
-            <p class="text-slate-600 leading-relaxed mb-6">
-                フォーラムでは、「誰一人取り残さないインクルーシブ防災」を目指して開発した救助アプリ『Shelperg（シェルパーグ）』についてポスター発表を行いました。<br><br>
-                このアプリは、災害時に助けを求める人が「HELPボタン」を押すだけで、位置情報が周囲のユーザーのマップに表示され、近くにいる人が迅速に「助ける意思表示」を行える仕組みです。単なるSOS発信にとどまらず、多様なユーザーに配慮した画面色補正やコンパス機能を搭載し、高い匿名性を保ちながら安全に使用できる設計にこだわりました。<br><br>
-                将来的には、より的確な救助活動を支援するため、建物内の「階層」や「服装情報」も共有できる機能の追加を見据えており、IT技術を用いた「共助」のアップデートを提案しました。
-            </p>
-
-            <h4 class="font-bold text-slate-800 mb-2">💡 専門家との対話で見えた「伝える」ことの本質</h4>
-            <p class="text-slate-600 leading-relaxed mb-6">
-                この国際フォーラムを通じて最も痛感したのは、「伝える」ことの難しさです。私たちが開発した機能の理屈やメリットだけを順序立てて説明しても、その背景にある「誰一人取り残さない」という本当の思いまでは伝わりきらないという現実に直面しました。<br><br>
-                また、第一線で活躍する専門家の方々から鋭いフィードバックをいただいた際、いかに自分たちの視野が狭かったかを思い知らされました。自分たちの前提だけで語るのではなく、目の前の相手が「今、何を一番知りたいのか」を会話の中から瞬時にくみ取るスキルの重要性を深く学びました。<br><br>
-                「作って終わり」ではなく、社会にどう届けるか。この気づきは、今後の研究やシステム開発において、決して独りよがりにならないための大きな指針となっています。
-            </p>
-
-            <a href="https://worldbosaiforum.com/2025/news/expo_detail---id-935.html" target="_blank"
-                class="inline-flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-full font-bold hover:bg-[#38bdf8] transition shadow-md">
-                公式サイトで詳細を見る
-            </a>
+    <!-- ====== MODAL: BOSAI ====== -->
+    <div id="modal-bosai" class="modal-ov" onclick="closeModal('modal-bosai')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-bar">
+                <span class="modal-bar-title">★ POSTER_PRESENTATION.EXE</span>
+                <button class="modal-x" onclick="closeModal('modal-bosai')" id="close-bosai">[X] CLOSE</button>
+            </div>
+            <div class="modal-body">
+                <img src="Image/Image_Bosai.jpg" alt="世界防災フォーラム">
+                <div class="modal-stitle">◆ 世界防災フォーラム ポスター発表</div>
+                <div class="modal-stitle">📱 リアルタイム救助アプリ「Shelperg」</div>
+                <p class="modal-text">
+                    フォーラムでは、「誰一人取り残さないインクルーシブ防災」を目指して開発した救助アプリ『Shelperg（シェルパーグ）』についてポスター発表を行いました。<br><br>
+                    このアプリは、「HELPボタン」を押すだけで位置情報が周囲のユーザーのマップに表示され、近くにいる人が迅速に「助ける意思表示」を行える仕組みです。多様なユーザーに配慮した画面色補正やコンパス機能を搭載し、高い匿名性を保ちながら安全に使用できる設計にこだわりました。<br><br>
+                    将来的には建物内の「階層」や「服装情報」も共有できる機能の追加を見据え、IT技術を用いた「共助」のアップデートを提案しました。
+                </p>
+                <div class="modal-stitle">💡 専門家との対話で見えた「伝える」ことの本質</div>
+                <p class="modal-text">
+                    この国際フォーラムを通じて最も痛感したのは、「伝える」ことの難しさです。機能の理屈やメリットを順序立てて説明しても、「誰一人取り残さない」という思いまでは伝わりきらないという現実に直面しました。<br><br>
+                    第一線で活躍する専門家の方々から鋭いフィードバックをいただき、いかに自分たちの視野が狭かったかを思い知らされました。「作って終わり」ではなく、社会にどう届けるか。この気づきは今後の大きな指針となっています。
+                </p>
+                <a href="https://worldbosaiforum.com/2025/news/expo_detail---id-935.html"
+                   target="_blank" rel="noopener" class="modal-btn" id="bosai-official-link">
+                    ▶ 公式サイトで詳細を見る
+                </a>
+            </div>
         </div>
     </div>
 
+    <!-- ====== SCRIPTS ====== -->
     <script>
-        // モーダルを開く関数
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.classList.add('modal-open');
-        }
+        /* ---- LOADER ---- */
+        const loader    = document.getElementById('loader');
+        const loaderPct = document.getElementById('loader-pct');
+        let pct = 0;
+        const tick = setInterval(() => {
+            pct = Math.min(100, pct + Math.floor(Math.random() * 14) + 4);
+            loaderPct.textContent = pct + '%';
+            if (pct >= 100) {
+                clearInterval(tick);
+                setTimeout(() => loader.classList.add('hide'), 300);
+            }
+        }, 75);
 
-        // モーダルを閉じる関数
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-            document.body.classList.remove('modal-open');
+        /* ---- MODALS ---- */
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-ov.open').forEach(m => {
+                    m.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
+        /* keyboard accessibility for project cards */
+        document.querySelectorAll('.proj-card').forEach(card => {
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') card.click();
+            });
+        });
+
+        /* ---- SCROLL REVEAL ---- */
+        const revealObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('show');
+                    revealObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+        /* ---- SPARKLE CURSOR ---- */
+        const SPARKLE_CHARS  = ['★', '◆', '+', '×', '◇', '✦', '▶'];
+        const SPARKLE_COLORS = ['#00e5ff', '#ff00cc', '#ffe600', '#00ff6e'];
+
+        // Inject keyframe
+        const ks = document.createElement('style');
+        ks.textContent = `
+            @keyframes sparkle-out {
+                0%  { transform:translate(-50%,-50%) scale(0) rotate(0deg);   opacity:1; }
+                100%{ transform:translate(-50%,-50%) scale(2)   rotate(200deg); opacity:0; }
+            }
+        `;
+        document.head.appendChild(ks);
+
+        document.addEventListener('mousemove', e => {
+            if (Math.random() > 0.82) {
+                const s = document.createElement('div');
+                s.textContent = SPARKLE_CHARS[Math.floor(Math.random() * SPARKLE_CHARS.length)];
+                const color = SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)];
+                s.style.cssText = `
+                    position:fixed;
+                    left:${e.clientX}px; top:${e.clientY}px;
+                    pointer-events:none;
+                    z-index:8999;
+                    font-size:${9 + Math.random() * 11}px;
+                    color:${color};
+                    text-shadow:0 0 6px ${color};
+                    animation:sparkle-out .65s ease-out forwards;
+                    font-family:'Press Start 2P',monospace;
+                `;
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 700);
+            }
+        });
     </script>
-</body>
 
+</body>
 </html>
